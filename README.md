@@ -1,6 +1,6 @@
 # VesselsFeaturesExtraction
 
-# Ce projet est un ensemble de scripts Python permettant d'extraire des caractéristiques des vaisseaux sanguins à partir d'images médicales.
+Ce projet est un ensemble de scripts Python permettant d'extraire des caractéristiques des vaisseaux sanguins à partir d'images médicales.
 
 ## Installation
 
