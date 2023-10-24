@@ -12,8 +12,10 @@ pip install -r requirements.txt
 
 python
 
-dataset.py: Ce fichier charge le dataset d'images médicales.
-skeletization.py: Ce fichier effectue la skeletisation des vaisseaux sanguins.
-topology.py: Ce fichier calcule la topologie des vaisseaux sanguins.
-featureExtract.py: Ce fichier extrait les caractéristiques des vaisseaux sanguins.
-refinement.py: Ce fichier améliore les caractéristiques des vaisseaux sanguins
+dataset.py: Ce fichier charge le dataset d'images médicales.<br />
+skeletization.py: Ce fichier effectue la skeletisation des vaisseaux sanguins a partir de la matrice des données.<br />
+topology.py: Ce fichier calcule la topologie des vaisseaux sanguins. extremitées, intersection, ...<br />
+featureExtract.py: Ce fichier extrait les caractéristiques des edges du graph.<br />
+branchAssignement.py: Ce fichier extrait les features des points en les assignant a leurs edges<br />
+refinement.py: Ce fichier améliore les caractéristiques des vaisseaux sanguins en enlevant les asperitées<br />
+utils.py: Ce fichier contient des fonctions utiles à tous les fichiers
