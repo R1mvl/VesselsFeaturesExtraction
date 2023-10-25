@@ -30,14 +30,16 @@ def showGraphCenterline(graph):
 
     for i in range(0, len(graph)):
         for j in range(0, len(graph[i][1])):
-            fig.add_trace(go.Scatter3d(x=[graph[i][0][0], graph[graph[i][1][j]][0][0]], y=[graph[i][0][1], graph[graph[i][1][j]][0][1]], z=[graph[i][0][2], graph[graph[i][1][j]][0][2]], mode='lines', line=dict(color=color[graph[i][2] % len(color)], width=6)))
+            # add the label of the edge
+            fig.add_trace(go.Scatter3d(x=[graph[i][0][0], graph[graph[i][1][j]][0][0]], y=[graph[i][0][1], graph[graph[i][1][j]][0][1]], z=[graph[i][0][2], graph[graph[i][1][j]][0][2]], mode='lines', line=dict(color=color[graph[i][2] % len(color)], width=6), name='edge' + str(graph[i][2])))
+    
 
 def showGraphLine(graph):
     for i in range(0, len(graph)):
         for j in graph[i][1]:
-            fig.add_trace(go.Scatter3d(x=[graph[i][0][0], graph[j][0][0]], y=[graph[i][0][1], graph[j][0][1]], z=[graph[i][0][2], graph[j][0][2]], mode='lines', line=dict(color='black', width=6, dash='dash')))
+            fig.add_trace(go.Scatter3d(x=[graph[i][0][0], graph[j][0][0]], y=[graph[i][0][1], graph[j][0][1]], z=[graph[i][0][2], graph[j][0][2]], mode='lines', line=dict(color='black', width=10, dash='dash')))
 
-def showMatrix(matrix, point_assignment):
+def showMatrix(matrix, point_assignment, points = None):
     x = []
     y = []
     z = []
@@ -49,9 +51,10 @@ def showMatrix(matrix, point_assignment):
                     x.append(i)
                     y.append(j)
                     z.append(k)
-                    c.append(point_assignment[i,j,k])
+                    if points == None or point_assignment[i,j,k] in points:
+                        c.append(point_assignment[i,j,k])
 
-    fig.add_trace(go.Scatter3d(x=x, y=y, z=z, mode='markers', marker=dict(size=4, color=c, colorscale='Portland', opacity=0.8)))
+    fig.add_trace(go.Scatter3d(x=x, y=y, z=z, mode='markers', marker=dict(size=4, color=c, opacity=0.8)))
 
 def show():
     fig.show()

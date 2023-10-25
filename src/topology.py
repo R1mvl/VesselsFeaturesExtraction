@@ -114,6 +114,7 @@ def findLineFromCenterLine(extremities, intersection, graph):
         x, y, z = graph[idx_point][0]
         list.append([x,y,z])
         graph[idx_point].append(edge_id)
+        print(edge_id)
         if graph[idx_point][0] in intersection:
             index = 0
             for i in range(len(final_graph)):
@@ -123,8 +124,7 @@ def findLineFromCenterLine(extremities, intersection, graph):
             final_graph[index][1].append(last_idx)
             for next in graph[idx_point][1]:
                 if graph[next][0] not in list:
-                    edge_id += 1
-                    findDeph(graph, final_graph, next, list, index, edge_id)
+                    edge_id = findDeph(graph, final_graph, next, list, index, edge_id + 1)
         elif graph[idx_point][0] in extremities:
             index = 0
             for i in range(len(final_graph)):
@@ -135,7 +135,8 @@ def findLineFromCenterLine(extremities, intersection, graph):
         else:
             for next in graph[idx_point][1]:
                 if graph[next][0] not in list:
-                    findDeph(graph, final_graph, next, list, last_idx, edge_id) 
+                    edge_id = findDeph(graph, final_graph, next, list, last_idx, edge_id) 
+        return edge_id
 
     findDeph(graph, graph2, 0, [], 0, 0)
 

@@ -3,6 +3,7 @@ from skeletonization import skeletonization, getCoordinatesPoint
 from topology import getGraphFromSkeleton, getPointFeature, removeIntersectionCycle, findLineFromCenterLine
 from branchAssignement import point_assignment
 from visualisation import showGraphCenterline, showGraphLine, showGraphExtremities, showGraphIntersection, showMatrix, show
+import numpy as np
 
 data_matrix = importMatrixFromNIIFile('data/output.nii')
 
@@ -17,16 +18,19 @@ centerLine, extremities, intersection = getPointFeature(skeleton_point, skeleton
 graph = getGraphFromSkeleton(skeleton_point)
 
 removeIntersectionCycle(intersection, skeleton_matrix, graph)
-graphLine = findLineFromCenterLine(extremities, intersection, graph)
 
+graphLine = findLineFromCenterLine(extremities, intersection, graph)
 point_edge = point_assignment(data_matrix, graph)
 
+""" 
 showGraphExtremities(extremities)
 showGraphIntersection(intersection)
 
-showGraphCenterline(graph)
+showMatrix(data_matrix, point_edge, [4,5])
 showGraphLine(graphLine)
-
-showMatrix(data_matrix, point_edge)
-
+showGraphCenterline(graph)
 show()
+"""
+
+print("Nombre de edgeID different dans point_edge : ", len(np.unique(point_edge)))
+print("nombre de edge dans graphLine : ", len(graphLine))
