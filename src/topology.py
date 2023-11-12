@@ -1,4 +1,5 @@
 import numpy as np
+from utils import searchIndexPointfromCoordInGraph
 
 def getGraphFromSkeleton(skeleton_point):
     """
@@ -18,8 +19,10 @@ def getGraphFromSkeleton(skeleton_point):
         for j in range(len(skeleton_point)):
             if i != j:
                 if skeleton_point[i][0] - 1 <= skeleton_point[j][0] <= skeleton_point[i][0] + 1 and skeleton_point[i][1] - 1 <= skeleton_point[j][1] <= skeleton_point[i][1] + 1 and skeleton_point[i][2] - 1 <= skeleton_point[j][2] <= skeleton_point[i][2] + 1:
-                    graph[i][1].append(j)
-                    graph[j][1].append(i)
+                    if j not in graph[i][1]:
+                        graph[i][1].append(j)
+                    if i not in graph[j][1]:
+                        graph[j][1].append(i)
 
     return graph
 
@@ -107,31 +110,24 @@ def findLineFromCenterLine(extremities, intersection, graph):
     for i in range(len(graph)):
         if graph[i][0] in intersection:
             graph2.append([graph[i][0], []])
-        if graph[i][0] in extremities:
+        elif graph[i][0] in extremities:
             graph2.append([graph[i][0], []])
 
     def findDeph(graph, final_graph, idx_point, list, last_idx, edge_id):
         x, y, z = graph[idx_point][0]
         list.append([x,y,z])
         graph[idx_point].append(edge_id)
-        print(edge_id)
         if graph[idx_point][0] in intersection:
-            index = 0
-            for i in range(len(final_graph)):
-                if final_graph[i][0] == [x,y,z]:
-                    index = i
-                    break
-            final_graph[index][1].append(last_idx)
+            index = searchIndexPointfromCoordInGraph(final_graph, [x,y,z])
+            if last_idx != index:    
+                final_graph[index][1].append(last_idx)
             for next in graph[idx_point][1]:
                 if graph[next][0] not in list:
                     edge_id = findDeph(graph, final_graph, next, list, index, edge_id + 1)
         elif graph[idx_point][0] in extremities:
-            index = 0
-            for i in range(len(final_graph)):
-                if final_graph[i][0] == [x,y,z]:
-                    index = i
-                    break
-            final_graph[index][1].append(last_idx)
+            index = searchIndexPointfromCoordInGraph(final_graph, [x,y,z])
+            if last_idx != index:      
+                final_graph[index][1].append(last_idx)
         else:
             for next in graph[idx_point][1]:
                 if graph[next][0] not in list:

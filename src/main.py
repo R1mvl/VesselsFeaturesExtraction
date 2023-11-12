@@ -2,10 +2,11 @@ from dataset import importMatrixFromNIIFile
 from skeletonization import skeletonization, getCoordinatesPoint
 from topology import getGraphFromSkeleton, getPointFeature, removeIntersectionCycle, findLineFromCenterLine
 from branchAssignement import point_assignment
-from visualisation import showGraphCenterline, showGraphLine, showGraphExtremities, showGraphIntersection, showMatrix, show
+from visualisation import showGraphCenterline, showGraphLine, showGraphExtremities, showGraphIntersection, showMatrix, show, addPointToGraph, init_layout
 import numpy as np
+from utils import searchIndexPointfromCoordInGraph
 
-data_matrix = importMatrixFromNIIFile('data/output.nii')
+data_matrix = importMatrixFromNIIFile('data/output.nii', False)
 
 # outlier from the dataset so we remove it
 data_matrix[57, 34, 37] = 0
@@ -22,15 +23,16 @@ removeIntersectionCycle(intersection, skeleton_matrix, graph)
 graphLine = findLineFromCenterLine(extremities, intersection, graph)
 point_edge = point_assignment(data_matrix, graph)
 
-""" 
+init_layout(graph)
+
 showGraphExtremities(extremities)
 showGraphIntersection(intersection)
 
-showMatrix(data_matrix, point_edge, [4,5])
-showGraphLine(graphLine)
 showGraphCenterline(graph)
-show()
-"""
+showGraphLine(graphLine)
 
-print("Nombre de edgeID different dans point_edge : ", len(np.unique(point_edge)))
-print("nombre de edge dans graphLine : ", len(graphLine))
+showMatrix(data_matrix, point_edge)
+
+#addPointToGraph(48,24,18)
+
+show()

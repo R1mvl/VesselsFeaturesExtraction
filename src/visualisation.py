@@ -4,6 +4,24 @@ color = ['red', 'green', 'blue', 'yellow', 'cyan', 'magenta', 'black', 'white', 
 fig = go.Figure()
 fig.update_layout(scene=dict(xaxis_title='X Label', yaxis_title='Y Label', zaxis_title='Z Label'))
 
+def init_layout(graph):
+    # fin the max x, y, z
+    maxx = 0
+    maxy = 0
+    maxz = 0
+    for i in range(0, len(graph)):
+        if graph[i][0][0] > maxx:
+            maxx = graph[i][0][0]
+        if graph[i][0][1] > maxy:
+            maxy = graph[i][0][1]
+        if graph[i][0][2] > maxz:
+            maxz = graph[i][0][2]
+    fig.update_layout(scene=dict(xaxis=dict(range=[0, maxx]), yaxis=dict(range=[0, maxy]), zaxis=dict(range=[0, maxz])))
+
+
+def addPointToGraph(x, y, z):
+    fig.add_trace(go.Scatter3d(x=[x], y=[y], z=[z], mode='markers', marker=dict(color='red', size=10)))
+
 def showGraphExtremities(extremities):
 
     exx = []
@@ -48,13 +66,18 @@ def showMatrix(matrix, point_assignment, points = None):
         for j in range(matrix.shape[1]):
             for k in range(matrix.shape[2]):
                 if matrix[i,j,k] > 0:
-                    x.append(i)
-                    y.append(j)
-                    z.append(k)
                     if points == None or point_assignment[i,j,k] in points:
+                        x.append(i)
+                        y.append(j)
+                        z.append(k)
                         c.append(point_assignment[i,j,k])
 
-    fig.add_trace(go.Scatter3d(x=x, y=y, z=z, mode='markers', marker=dict(size=4, color=c, opacity=0.8)))
+    if points == None:
+        fig.add_trace(go.Scatter3d(x=x, y=y, z=z, mode='markers', marker=dict(size=4, color=c, opacity=0.8)))
+    else:
+        for i in range(len(x)):
+            if c[i] in points:
+                fig.add_trace(go.Scatter3d(x=[x[i]], y=[y[i]], z=[z[i]], mode='markers', marker=dict(size=4, color=color[int(c[i]) % len(color)], opacity=0.8)))
 
 def show():
     fig.show()
