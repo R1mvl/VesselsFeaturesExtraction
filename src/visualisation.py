@@ -5,18 +5,24 @@ fig = go.Figure()
 fig.update_layout(scene=dict(xaxis_title='X Label', yaxis_title='Y Label', zaxis_title='Z Label'))
 
 def init_layout(graph):
-    # fin the max x, y, z
-    maxx = 0
-    maxy = 0
-    maxz = 0
+    offset = 10
+    maxx, maxy, maxz = graph[0][0][0], graph[0][0][1], graph[0][0][2]
+    minx, miny, minz = graph[0][0][0], graph[0][0][1], graph[0][0][2]
+
     for i in range(0, len(graph)):
+        if graph[i][0][0] < minx:
+            minx = graph[i][0][0]
         if graph[i][0][0] > maxx:
             maxx = graph[i][0][0]
+        if graph[i][0][1] < miny:
+            miny = graph[i][0][1]
         if graph[i][0][1] > maxy:
             maxy = graph[i][0][1]
+        if graph[i][0][2] < minz:
+            minz = graph[i][0][2]
         if graph[i][0][2] > maxz:
             maxz = graph[i][0][2]
-    fig.update_layout(scene=dict(xaxis=dict(range=[0, maxx]), yaxis=dict(range=[0, maxy]), zaxis=dict(range=[0, maxz])))
+    fig.update_layout(scene=dict(xaxis=dict(range=[minx - offset, maxx + offset]), yaxis=dict(range=[miny - offset, maxy + offset]), zaxis=dict(range=[minz - offset, maxz + offset])))
 
 
 def addPointToGraph(x, y, z):

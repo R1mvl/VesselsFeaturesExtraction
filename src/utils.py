@@ -1,3 +1,5 @@
+import datetime
+
 def searchIndexPointfromCoordInGraph(graph, coord):
     """
         This function search a coordinate in the graph and return the node if it exists.
@@ -13,3 +15,8 @@ def searchIndexPointfromCoordInGraph(graph, coord):
         if graph[i][0] == coord:
             return i
     return -1
+
+def printTime(message, time):
+    print("=========================================")
+    print(message, datetime.datetime.now() - time)
+    return datetime.datetime.now()
