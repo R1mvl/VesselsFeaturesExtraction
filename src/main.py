@@ -18,18 +18,26 @@ data_matrix[221, 79, 213] = 0
 
 count = 1
 iteration = 1
+timeStep = []
 
 while count > 0:
     print("Iteration : ", iteration)
     iteration += 1
     pbar = tqdm(total=8, bar_format='{desc}: {percentage:3.0f}%|{bar}| {n_fmt}/{total_fmt} [{elapsed}<{remaining}]', unit='step', colour='#00fff0')
     time = datetime.datetime.now()
-    timeStep = []
+
+    for i in range(data_matrix.shape[0]):
+        for j in range(data_matrix.shape[1]):
+            for k in range(data_matrix.shape[2]):
+                if data_matrix[i, j, k] == 1:
+                    neighbors = data_matrix[i-1:i+2, j-1:j+2, k-1:k+2]
+                    if np.sum(neighbors) == 1:
+                        data_matrix[i, j, k] = 0
 
     pbar.desc = "Skeletonization"
     skeleton_matrix = skeletonization(data_matrix)
     skeleton_point = getCoordinatesPoint(skeleton_matrix)
-    timeStep.append(["Skeletonization", datetime.datetime.now() - time])
+    timeStep.append([iteration, "Skeletonization", datetime.datetime.now() - time])
     time = datetime.datetime.now()
     pbar.update(1)
 
@@ -64,7 +72,7 @@ while count > 0:
     pbar.update(1)
 
     pbar.desc = "Refinement"
-    data_matrix, intersections, extrimities, count = refinement(graph, intersection, extremities, data_matrix, point_edge, 1)
+    data_matrix, intersections, extrimities, count = refinement(graph, intersection, extremities, data_matrix, point_edge, 2)
     timeStep.append([iteration, "Refinement", datetime.datetime.now() - time])
     time = datetime.datetime.now()
     pbar.update(1)

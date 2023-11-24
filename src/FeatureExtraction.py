@@ -42,10 +42,13 @@ def point_assignment(data_matrix, graph):
             point_assignment: 3D matrix with the edge id of the closest edge of the graph
     """
 
+    tpa = tqdm(total=data_matrix.shape[0] * data_matrix.shape[1] * data_matrix.shape[2], desc="Point assignment avancement", colour="#00ff00")
+
     point_assignment = np.zeros(data_matrix.shape)
     for i in range(point_assignment.shape[0]):
         for j in range(point_assignment.shape[1]):
             for k in range(point_assignment.shape[2]):
+                tpa.update(1)
                 if data_matrix[i, j, k] == 1:
                     found = False
                     distance = 0
