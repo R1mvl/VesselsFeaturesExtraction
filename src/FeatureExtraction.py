@@ -25,7 +25,6 @@ def propagation(data_matrix, graph, i, j, k, alreadyVisited, dist, distMax):
                 id = propagation(data_matrix, graph, ni, nj, nk, alreadyVisited, dist + 1, distMax)
                 if id > -1:
                     return id
-            
     return -1
 
 
@@ -42,7 +41,7 @@ def point_assignment(data_matrix, graph):
             point_assignment: 3D matrix with the edge id of the closest edge of the graph
     """
 
-    tpa = tqdm(total=data_matrix.shape[0] * data_matrix.shape[1] * data_matrix.shape[2], desc="Point assignment avancement", colour="#00ff00")
+    tpa = tqdm(total=data_matrix.shape[0] * data_matrix.shape[1] * data_matrix.shape[2], desc="Feature Annotation", colour="green", bar_format="{desc:30}: {percentage:3.0f}%|{bar:200}| {n_fmt}/{total_fmt} [{elapsed}<{remaining}]")
 
     point_assignment = np.zeros(data_matrix.shape)
     for i in range(point_assignment.shape[0]):
@@ -59,4 +58,6 @@ def point_assignment(data_matrix, graph):
                             point_assignment[i, j, k] = res
                         else:
                             distance += 1
+
+    tpa.close()
     return point_assignment

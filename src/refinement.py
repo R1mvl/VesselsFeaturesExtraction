@@ -1,5 +1,6 @@
 import math
 from utils import searchIndexPointfromCoordInGraph
+from tqdm import tqdm
 
 def minimumDistanceToSurface(point, data_matrix):
     """
@@ -138,6 +139,7 @@ def refinement(graph, intersections, extrimities, data_matrix, point_assignement
             extrimities (list): list of coordinates of the extremity point without the bulges
     """
 
+    pbar = tqdm(total=len(extrimities), desc="Refinement", colour="green", bar_format="{desc:30}: {percentage:3.0f}%|{bar:200}| {n_fmt}/{total_fmt} [{elapsed}<{remaining}]")
     count = 0
     for extrimity_point in extrimities:
 
@@ -147,5 +149,10 @@ def refinement(graph, intersections, extrimities, data_matrix, point_assignement
             idx_point = searchIndexPointfromCoordInGraph(graph, extrimity_point)
             remove_bulge(data_matrix, point_assignement, intersections, extrimities, intersection_point, extrimity_point, graph[idx_point][2])
             count += 1
+            pbar.update(1)
+
+        pbar.update(1)
+
+    pbar.close()
 
     return data_matrix, intersections, extrimities, count

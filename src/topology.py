@@ -1,5 +1,6 @@
 import numpy as np
 from utils import searchIndexPointfromCoordInGraph
+from tqdm import tqdm
 
 def getGraphFromSkeleton(skeleton_point):
     """
@@ -53,7 +54,7 @@ def getPointFeature(skeleton_point, skeleton_matrix):
         elif np.sum(neighbors) >= 4:
             intersection.append(skeleton_point[i])
 
-    return centerline, extremities, intersection
+    return extremities, intersection
 
 def removeIntersectionCycle(intersection, skeleton_matrix, graph):
     """
@@ -140,3 +141,18 @@ def findLineFromCenterLine(extremities, intersection, graph):
     findDeph(graph, graph2, 0, [], 0, 0)
 
     return graph2
+
+def topology(skeleton_point, skeleton_matrix):
+
+    pbar = tqdm(total=4, colour='green', desc="Topology", bar_format="{desc:30}: {percentage:3.0f}%|{bar:200}| {n_fmt}/{total_fmt} [{elapsed}<{remaining}]")
+
+    extremities, intersection = getPointFeature(skeleton_point, skeleton_matrix)
+    pbar.update(1)
+    graph = getGraphFromSkeleton(skeleton_point)
+    pbar.update(1)
+    removeIntersectionCycle(intersection, skeleton_matrix, graph)
+    pbar.update(1)
+    graphLine = findLineFromCenterLine(extremities, intersection, graph)
+    pbar.update(1)
+    pbar.close()
+    return graph, graphLine, extremities, intersection

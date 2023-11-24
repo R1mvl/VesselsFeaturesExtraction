@@ -1,22 +1,8 @@
 import numpy as np
 from skimage.morphology import skeletonize_3d
+from tqdm import tqdm
 
 def skeletonization(matrix):
-    """
-        This function takes a 3D matrix and returns a 3D matrix with the skeleton of the input matrix.
-        The skeleton is the thinnest representation of the input matrix.
-
-        Args:
-            matrix (numpy.ndarray): 3D matrix
-
-        Returns:
-            skeleton_matrix (numpy.ndarray): 3D matrix with the skeleton of the input matrix
-    """
-    skeleton_matrix = skeletonize_3d(matrix)
-    skeleton_matrix[skeleton_matrix == 255] = 1
-    return skeleton_matrix
-
-def getCoordinatesPoint(skeleton_matrix):
     """
         This function takes a 3D matrix and returns a list of coordinates of the skeleton points.
 
@@ -27,11 +13,14 @@ def getCoordinatesPoint(skeleton_matrix):
             skeleton_point (list): list of coordinates of the skeleton points
     """
 
-    skeleton_point = []
-    for i in range(skeleton_matrix.shape[0]):
-        for j in range(skeleton_matrix.shape[1]):
-            for k in range(skeleton_matrix.shape[2]):
-                if skeleton_matrix[i,j,k] > 0:
-                    skeleton_point.append([i,j,k])
-
-    return skeleton_point
+    pbar = tqdm(total=4, desc="Skeletonization", colour="green",bar_format="{desc:30}: {percentage:3.0f}%|{bar:200}| {n_fmt}/{total_fmt} [{elapsed}<{remaining}]")
+    skeleton_matrix = skeletonize_3d(matrix)
+    pbar.update(1)
+    skeleton_matrix[skeleton_matrix == 255] = 1
+    pbar.update(1)
+    skeleton_point_indices = np.argwhere(skeleton_matrix > 0)
+    pbar.update(1)
+    skeleton_point = skeleton_point_indices.tolist()
+    pbar.update(1)
+    pbar.close()
+    return skeleton_matrix, skeleton_point
