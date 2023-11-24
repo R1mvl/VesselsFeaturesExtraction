@@ -62,7 +62,7 @@ def removeIntersectionCycle(intersection, skeleton_matrix, graph):
         Args:
             intersection (list): list of coordinates of the intersection points
             skeleton_matrix (numpy.ndarray): 3D matrix with the skeleton of the input matrix
-            graph (list): graph of the skeleton
+            grap h (list): graph of the skeleton
 
         Returns:
             None
@@ -116,7 +116,11 @@ def findLineFromCenterLine(extremities, intersection, graph):
     def findDeph(graph, final_graph, idx_point, list, last_idx, edge_id):
         x, y, z = graph[idx_point][0]
         list.append([x,y,z])
-        graph[idx_point].append(edge_id)
+        if len(graph[idx_point]) == 2:
+            graph[idx_point].append(edge_id)
+        else:
+            graph[idx_point][2] = edge_id
+        
         if graph[idx_point][0] in intersection:
             index = searchIndexPointfromCoordInGraph(final_graph, [x,y,z])
             if last_idx != index:    
@@ -133,7 +137,6 @@ def findLineFromCenterLine(extremities, intersection, graph):
                 if graph[next][0] not in list:
                     edge_id = findDeph(graph, final_graph, next, list, last_idx, edge_id) 
         return edge_id
-
     findDeph(graph, graph2, 0, [], 0, 0)
 
     return graph2
