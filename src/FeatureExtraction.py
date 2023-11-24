@@ -25,7 +25,6 @@ def propagation(data_matrix, graph, i, j, k, alreadyVisited, dist, distMax):
                 id = propagation(data_matrix, graph, ni, nj, nk, alreadyVisited, dist + 1, distMax)
                 if id > -1:
                     return id
-            
     return -1
 
 

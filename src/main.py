@@ -3,8 +3,8 @@ time = datetime.datetime.now()
 
 from utils import searchIndexPointfromCoordInGraph, printTime
 from dataset import importMatrixFromNIIFile
-from skeletonization import skeletonization, getCoordinatesPoint
-from topology import getGraphFromSkeleton, getPointFeature, removeIntersectionCycle, findLineFromCenterLine
+from skeletonization import skeletonization
+from topology import topology
 from FeatureExtraction import point_assignment
 from visualisation import showGraphCenterline, showGraphLine, showGraphExtremities, showGraphIntersection, showMatrix, show, addPointToGraph, init_layout
 from refinement import refinement
@@ -22,17 +22,23 @@ iteration = 1
 while count > 0:
     print("Iteration : ", iteration)
     iteration += 1
-    pbar = tqdm(total=8, bar_format='{desc}: {percentage:3.0f}%|{bar}| {n_fmt}/{total_fmt} [{elapsed}<{remaining}]', unit='step', colour='#00fff0')
+    pbar = tqdm(total=4, bar_format='{desc}: {percentage:3.0f}%|{bar}| {n_fmt}/{total_fmt} [{elapsed}<{remaining}]', unit='step', colour='#00fff0')
     time = datetime.datetime.now()
     timeStep = []
 
     pbar.desc = "Skeletonization"
-    skeleton_matrix = skeletonization(data_matrix)
-    skeleton_point = getCoordinatesPoint(skeleton_matrix)
-    timeStep.append(["Skeletonization", datetime.datetime.now() - time])
+    skeleton_matrix, skeleton_point = skeletonization(data_matrix)
+    timeStep.append([iteration, "Skeletonization", datetime.datetime.now() - time])
     time = datetime.datetime.now()
     pbar.update(1)
 
+    pbar.desc = "Topology"
+    graph, graphLine, extremities, intersection = topology(skeleton_point, skeleton_matrix)
+    timeStep.append([iteration, "Topology", datetime.datetime.now() - time])
+    time = datetime.datetime.now()
+    pbar.update(1)
+
+    """
     pbar.desc = "Get point feature"
     centerLine, extremities, intersection = getPointFeature(skeleton_point, skeleton_matrix)
     timeStep.append([iteration, "Get point feature", datetime.datetime.now() - time])
@@ -56,6 +62,7 @@ while count > 0:
     timeStep.append([iteration, "Find line from center line", datetime.datetime.now() - time])
     time = datetime.datetime.now()
     pbar.update(1)
+    """
 
     pbar.desc = "Point assignment"
     point_edge = point_assignment(data_matrix, graph)
@@ -64,13 +71,8 @@ while count > 0:
     pbar.update(1)
 
     pbar.desc = "Refinement"
-    data_matrix, intersections, extrimities, count = refinement(graph, intersection, extremities, data_matrix, point_edge, 1)
+    data_matrix, intersections, extrimities, count = refinement(graph, intersection, extremities, data_matrix, point_edge, 2)
     timeStep.append([iteration, "Refinement", datetime.datetime.now() - time])
-    time = datetime.datetime.now()
-    pbar.update(1)
-
-    graphLine = findLineFromCenterLine(extremities, intersection, graph)
-    timeStep.append([iteration, "Find line from center line", datetime.datetime.now() - time])
     time = datetime.datetime.now()
     pbar.update(1)
 
@@ -91,4 +93,4 @@ showGraphLine(graphLine)
 show()
 
 for i in range(len(timeStep)):
-    print(timeStep[i][0], " : ", timeStep[i][1], " : ", printTime(timeStep[i][2]))
+    print(timeStep[i][0], " : ", timeStep[i][1], " : ", timeStep[i][2])

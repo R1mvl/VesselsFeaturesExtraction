@@ -53,7 +53,7 @@ def getPointFeature(skeleton_point, skeleton_matrix):
         elif np.sum(neighbors) >= 4:
             intersection.append(skeleton_point[i])
 
-    return centerline, extremities, intersection
+    return extremities, intersection
 
 def removeIntersectionCycle(intersection, skeleton_matrix, graph):
     """
@@ -140,3 +140,10 @@ def findLineFromCenterLine(extremities, intersection, graph):
     findDeph(graph, graph2, 0, [], 0, 0)
 
     return graph2
+
+def topology(skeleton_point, skeleton_matrix):
+    extremities, intersection = getPointFeature(skeleton_point, skeleton_matrix)
+    graph = getGraphFromSkeleton(skeleton_point)
+    removeIntersectionCycle(intersection, skeleton_matrix, graph)
+    graphLine = findLineFromCenterLine(extremities, intersection, graph)
+    return graph, graphLine, extremities, intersection
