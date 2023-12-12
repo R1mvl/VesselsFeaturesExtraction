@@ -1,6 +1,8 @@
 import numpy as np
 from skimage.morphology import skeletonize_3d
 from tqdm import tqdm
+import plotly.graph_objects as go
+
 
 def skeletonization(matrix):
     """
@@ -23,4 +25,5 @@ def skeletonization(matrix):
     skeleton_point = skeleton_point_indices.tolist()
     pbar.update(1)
     pbar.close()
+
     return skeleton_matrix, skeleton_point

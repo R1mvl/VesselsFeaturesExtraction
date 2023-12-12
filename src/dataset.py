@@ -13,6 +13,7 @@ def importMatrixFromNIIFile(path, removeEmptySlices = True):
             matrix (numpy.ndarray): 3D matrix
     """
 
+    np.warnings.filterwarnings('ignore')
 
     img = nib.load(path)
     data = img.get_fdata()
@@ -22,11 +23,6 @@ def importMatrixFromNIIFile(path, removeEmptySlices = True):
         data = data[:, np.any(data, axis=(0, 2)), :]
         data = data[np.any(data, axis=(1, 2)), :, :]
 
-    matrix = np.zeros(data.shape)
-    for i in range(data.shape[0]):
-        for j in range(data.shape[1]):
-            for k in range(data.shape[2]):
-                if data[i,j,k] > 0:
-                    matrix[i,j,k] = 1
+    matrix = np.where(data > 0, 1, 0)
 
     return matrix
